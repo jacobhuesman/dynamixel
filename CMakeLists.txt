@@ -16,7 +16,7 @@ generate_dynamic_reconfigure_options(
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES Dynamixel
-    CATKIN_DEPENDS roscpp tf2
+    CATKIN_DEPENDS roscpp tf2 dynamic_reconfigure
 )
 
 find_package(Boost COMPONENTS program_options REQUIRED)
