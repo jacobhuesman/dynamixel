@@ -45,6 +45,9 @@ add_executable(comm_tool src/util/comm_tool.cpp)
 target_link_libraries(comm_tool Dynamixel)
 target_link_libraries(comm_tool ${Boost_LIBRARIES})
 
+add_executable(mraa_test src/tests/mraa_test.cpp)
+target_link_libraries(mraa_test mraa)
+
 #########
 # Tests #
 #########

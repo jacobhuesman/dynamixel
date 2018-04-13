@@ -237,6 +237,10 @@ geometry_msgs::TransformStamped Dynamixel::getTransformMsg()
 
 MraaI2c::MraaI2c(int bus, uint8_t address)
 {
+  if (mraa_get_platform_type() == MRAA_UNKNOWN_PLATFORM || mraa_get_platform_type() == MRAA_NULL_PLATFORM)
+  {
+    throw cl_host_error("Host does not support mraa::i2c");
+  }
   this->i2c = new mraa::I2c(bus);
   this->bus = bus;
   this->address = address;
