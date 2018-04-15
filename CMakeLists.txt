@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp
     tf2
     dynamic_reconfigure
+    std_srvs
 )
 
 generate_dynamic_reconfigure_options(
@@ -47,6 +48,11 @@ target_link_libraries(comm_tool ${Boost_LIBRARIES})
 
 add_executable(mraa_test src/tests/mraa_test.cpp)
 target_link_libraries(mraa_test mraa)
+
+add_executable(dynamixel_reset_server src/util/dynamixel_reset_server.cpp)
+target_link_libraries(dynamixel_reset_server mraa)
+target_link_libraries(dynamixel_reset_server ${catkin_LIBRARIES})
+
 
 #########
 # Tests #
