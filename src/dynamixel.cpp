@@ -19,7 +19,8 @@ Dynamixel::Dynamixel(I2cInterface *interface, std::string frame_id, std::string 
 
   this->i2c = interface;
   seq = 0;
-  transform.setOrigin(tf2::Vector3(24.15e-3, 0.0, 32.5e-3));
+  //transform.setOrigin(tf2::Vector3(24.15e-3, 0.0, 32.5e-3));
+  transform.setOrigin(tf2::Vector3(0.016256, 0.000508, 0.0195072));
   tf2::Quaternion q;
   q.setRPY(0.0, 0.0, 0.0);
   this->frame_id = frame_id;
