@@ -7,7 +7,12 @@ namespace apriltag_tracker
 
 Dynamixel::Dynamixel(uint8_t i2c_address) : Dynamixel(new MraaI2c(0, i2c_address)) {}
 
-Dynamixel::Dynamixel(I2cInterface *interface)
+Dynamixel::Dynamixel(uint8_t i2c_address, std::string frame_id, std::string child_frame_id) :
+    Dynamixel(new MraaI2c(0, i2c_address), frame_id, child_frame_id) {}
+
+Dynamixel::Dynamixel(I2cInterface *interface) : Dynamixel(interface, "servo_base_link", "servo_joint") {}
+
+Dynamixel::Dynamixel(I2cInterface *interface, std::string frame_id, std::string child_frame_id)
 {
   track_tag = false;
   max_velocity = 0.8;
@@ -17,8 +22,8 @@ Dynamixel::Dynamixel(I2cInterface *interface)
   transform.setOrigin(tf2::Vector3(24.15e-3, 0.0, 32.5e-3));
   tf2::Quaternion q;
   q.setRPY(0.0, 0.0, 0.0);
-  frame_id = "servo_base_link"; // TODO parametrize
-  child_frame_id = "servo_joint"; // TODO parametrize
+  this->frame_id = frame_id;
+  this->child_frame_id = child_frame_id;
 
   v_s = 86.0297; // Conversion from rad/s to servo units
   current_position = 512;

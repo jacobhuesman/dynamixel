@@ -42,8 +42,10 @@ namespace apriltag_tracker
   class Dynamixel
   {
   public:
+    explicit Dynamixel(uint8_t i2c_address, std::string frame_id, std::string child_frame_id);
     explicit Dynamixel(uint8_t i2c_address);
     explicit Dynamixel(I2cInterface *interface);
+    explicit Dynamixel(I2cInterface *interface, std::string frame_id, std::string child_frame_id);
 
     void writeI2c(CLMessage32* message);
     void readI2c(CLMessage32* message);
