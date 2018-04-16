@@ -37,7 +37,7 @@ void Dynamixel::reconfigureCallback(DynamicServoConfig &config, uint32_t level)
            config.max_velocity, config.track_tag ? "true" : "false");
   this->max_velocity = config.max_velocity;
   this->track_tag = config.track_tag;
-  if (level == 1 && !this->track_tag)
+  if (level == 1 && !this->track_tag) // TODO make this a set point instead
   {
     ROS_INFO("Setting position to: %i", config.set_position);
     this->setVelocity(50);
