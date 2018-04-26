@@ -38,7 +38,16 @@ int main(int argc, char **argv)
     throw cl_host_error("Host must be the UP2 board");
   }
 
-  Dynamixel *servo = new Dynamixel(0x11, "zr300_dynamixel", "zr300_mount", 207, 816, 28);
+  Dynamixel *servo = new Dynamixel(0x11, "zr300_dynamixel", "zr300_mount", 284, 739, 28, 0.5);
+
+  try
+  {
+    servo->setVelocity(0.5 * 86.0297 / 2);
+  }
+  catch (cl_error &e)
+  {
+    ROS_WARN("%s", e.what());
+  }
 
   ros::Rate rate(30);
   while(ros::ok())
