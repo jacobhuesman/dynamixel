@@ -16,7 +16,7 @@
 #include <dynamixel/DynamicServoConfig.h>
 
 
-namespace apriltag_tracker
+namespace dynamixel
 {
   class I2cInterface
   {
@@ -64,7 +64,7 @@ namespace apriltag_tracker
 
     static uint8_t computeChecksum(CLMessage32 message);
 
-    void reconfigureCallback(apriltag_tracker::DynamicServoConfig &config, uint32_t level);
+    void reconfigureCallback(dynamixel::DynamicServoConfig &config, uint32_t level);
 
   private:
     I2cInterface *i2c;

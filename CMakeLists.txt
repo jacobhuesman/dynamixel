@@ -53,6 +53,9 @@ add_executable(dynamixel_reset_server src/util/dynamixel_reset_server.cpp)
 target_link_libraries(dynamixel_reset_server mraa)
 target_link_libraries(dynamixel_reset_server ${catkin_LIBRARIES})
 
+add_executable(scanner_node src/scanner_node.cpp)
+target_link_libraries(scanner_node Dynamixel)
+target_link_libraries(scanner_node ${catkin_LIBRARIES})
 
 #########
 # Tests #
