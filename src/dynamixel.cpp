@@ -12,13 +12,27 @@ Dynamixel::Dynamixel(uint8_t i2c_address, std::string frame_id, std::string chil
     Dynamixel(new MraaI2c(0, i2c_address), frame_id, child_frame_id)
 {}
 
+Dynamixel::Dynamixel(uint8_t i2c_address, std::string frame_id, std::string child_frame_id,
+                     uint16_t min, uint16_t max, uint16_t offset) :
+    Dynamixel(new MraaI2c(0, i2c_address), frame_id, child_frame_id, min, max, offset)
+{}
+
+
 Dynamixel::Dynamixel(I2cInterface *interface) : Dynamixel(interface, "servo_base_link", "servo_joint")
 {}
 
-Dynamixel::Dynamixel(I2cInterface *interface, std::string frame_id, std::string child_frame_id)
+Dynamixel::Dynamixel(I2cInterface *interface, std::string frame_id, std::string child_frame_id) :
+    Dynamixel(interface, frame_id, child_frame_id, 12, 1011, 0)
+{}
+
+Dynamixel::Dynamixel(I2cInterface *interface, std::string frame_id, std::string child_frame_id,
+                     uint16_t min, uint16_t max, uint16_t offset)
 {
-  track_tag = false;
-  max_velocity = 0.8;
+  this->track_tag = false;
+  this->max_velocity = 0.8;
+  this->min = min;
+  this->max = max;
+  this->offset = offset;
 
   this->i2c = interface;
   seq = 0;
@@ -85,13 +99,13 @@ void Dynamixel::readI2c(CLMessage32 *message)
 //TODO add error checking for both setPosition and getPosition
 void Dynamixel::setPosition(uint16_t position)
 {
-  if (position > 1023)
+  if (position + offset > 1023)
   {
-    throw cl_error("[setPosition] desired position is out of bounds (expected position = 0-1023)");
+    throw cl_error("[setPosition] desired position is out of bounds");
   }
   CLMessage32 message;
   message.ucl.instruction = DYN_SET_POSITION;
-  message.ucl.data = position;
+  message.ucl.data = position + offset;
   message.ucl.checksum = computeChecksum(message);
   writeI2c(&message);
   readI2c(&message);
@@ -135,7 +149,7 @@ void Dynamixel::getPosition(uint16_t *position)
   {
     throw cl_device_error("[getPosition] Device returned out of bounds position (not 0-1023)");
   }
-  *position = message.ucl.data;
+  *position = message.ucl.data - offset;
 }
 
 uint16_t Dynamixel::getCurrentPosition()
@@ -216,11 +230,11 @@ void Dynamixel::scan()
   }
 
   // If we've hit the end, change direction
-  if (current_position >= 1011)
+  if (current_position >= max)
   {
     velocity = -max_velocity;
   }
-  if (current_position <= 12)
+  if (current_position <= min)
   {
     velocity = max_velocity;
   }
