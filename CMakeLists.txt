@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     tf2
+    tf2_ros
     dynamic_reconfigure
     std_srvs
 )

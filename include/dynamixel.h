@@ -53,6 +53,7 @@ namespace dynamixel
     void setVelocity(uint16_t velocity);
     void setPollingDt(uint16_t polling_dt);
     void getPosition(uint16_t *position);
+    uint16_t getCurrentPosition();
 
     tf2::Transform getTransform();
     tf2::Stamped<tf2::Transform> getStampedTransform();

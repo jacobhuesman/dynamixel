@@ -138,6 +138,11 @@ void Dynamixel::getPosition(uint16_t *position)
   *position = message.ucl.data;
 }
 
+uint16_t Dynamixel::getCurrentPosition()
+{
+  return current_position;
+}
+
 int16_t Dynamixel::calculateDesiredVelocity(double theta)
 {
   // Adjust servo
