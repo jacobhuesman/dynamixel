@@ -1,25 +1,17 @@
 #include <ros/ros.h>
 #include <dynamixel.h>
-#include <std_srvs/SetBool.h>
+#include <std_srvs/Empty.h>
 #include <tf2_ros/transform_broadcaster.h>
 
 using namespace dynamixel;
-using std_srvs::SetBool;
+using std_srvs::Empty;
 
-bool scan;
+bool start_scan;
 
-bool scan_callback(SetBool::Request &req, SetBool::Response &res)
+bool scan_callback(Empty::Request &req, Empty::Response &res)
 {
-  scan = req.data;
-  if (scan)
-  {
-    ROS_INFO("Set scan to true");
-  }
-  else
-  {
-    ROS_INFO("Set scan to false");
-  }
-  res.success = 1;
+  start_scan = true;
+  return true;
 }
 
 int main(int argc, char **argv)
@@ -30,7 +22,8 @@ int main(int argc, char **argv)
   ros::ServiceServer scan_service = nh.advertiseService("scan", scan_callback);
   tf2_ros::TransformBroadcaster broadcaster;
 
-  scan = false;
+  start_scan = false;
+  bool left_limit_hit = false, right_limit_hit = false;
 
   // Initialize Camera Objects
   if (mraa_get_platform_type() != MRAA_UP2)
@@ -52,15 +45,32 @@ int main(int argc, char **argv)
   ros::Rate rate(30);
   while(ros::ok())
   {
+    if (start_scan)
+    {
+      left_limit_hit = false;
+      right_limit_hit = false;
+      start_scan = false;
+    }
+
     try
     {
       servo->updatePosition();
       ROS_INFO("Current Position: %i", servo->getCurrentPosition());
-      if (scan)
+      if (!right_limit_hit || !left_limit_hit)
       {
         servo->scan();
+        if (servo->getCurrentPosition() >= (739 - 10))
+        {
+          ROS_INFO("Hit left limit");
+          left_limit_hit = true;
+        }
+        if (servo->getCurrentPosition() <= (284 + 10))
+        {
+          ROS_INFO("Hit right limit");
+          right_limit_hit = true;
+        }
       }
-      else if ((abs(servo->getCurrentPosition() - 512) > 10))
+      else if (abs(servo->getCurrentPosition() - 512) > 10)
       {
         servo->setPosition(512);
       }
