@@ -10,8 +10,7 @@ void getRPY(tf2::Quaternion q, double &roll, double &pitch, double &yaw)
   matrix.getRPY(roll, pitch, yaw);
 }
 
-using namespace apriltag_tracker;
-using namespace apriltag_tracker;
+using namespace dynamixel;
 using testing::_;
 
 class MockI2c : public I2cInterface
