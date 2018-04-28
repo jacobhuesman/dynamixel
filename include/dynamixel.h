@@ -44,12 +44,12 @@ namespace dynamixel
   public:
     explicit Dynamixel(uint8_t i2c_address, std::string frame_id, std::string child_frame_id);
     explicit Dynamixel(uint8_t i2c_address, std::string frame_id, std::string child_frame_id,
-                       uint16_t min, uint16_t max, uint16_t offset);
+                       uint16_t min, uint16_t max, uint16_t offset, double max_velocity);
     explicit Dynamixel(uint8_t i2c_address);
     explicit Dynamixel(I2cInterface *interface);
     explicit Dynamixel(I2cInterface *interface, std::string frame_id, std::string child_frame_id);
     explicit Dynamixel(I2cInterface *interface, std::string frame_id, std::string child_frame_id,
-                       uint16_t min, uint16_t max, uint16_t offset);
+                       uint16_t min, uint16_t max, uint16_t offset, double max_velocity);
 
     void writeI2c(CLMessage32* message);
     void readI2c(CLMessage32* message);

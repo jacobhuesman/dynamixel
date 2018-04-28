@@ -13,8 +13,8 @@ Dynamixel::Dynamixel(uint8_t i2c_address, std::string frame_id, std::string chil
 {}
 
 Dynamixel::Dynamixel(uint8_t i2c_address, std::string frame_id, std::string child_frame_id,
-                     uint16_t min, uint16_t max, uint16_t offset) :
-    Dynamixel(new MraaI2c(0, i2c_address), frame_id, child_frame_id, min, max, offset)
+                     uint16_t min, uint16_t max, uint16_t offset, double max_velocity) :
+    Dynamixel(new MraaI2c(0, i2c_address), frame_id, child_frame_id, min, max, offset, max_velocity)
 {}
 
 
@@ -22,14 +22,14 @@ Dynamixel::Dynamixel(I2cInterface *interface) : Dynamixel(interface, "servo_base
 {}
 
 Dynamixel::Dynamixel(I2cInterface *interface, std::string frame_id, std::string child_frame_id) :
-    Dynamixel(interface, frame_id, child_frame_id, 12, 1011, 0)
+    Dynamixel(interface, frame_id, child_frame_id, 12, 1011, 0, 0.8)
 {}
 
 Dynamixel::Dynamixel(I2cInterface *interface, std::string frame_id, std::string child_frame_id,
-                     uint16_t min, uint16_t max, uint16_t offset)
+                     uint16_t min, uint16_t max, uint16_t offset, double max_velocity)
 {
   this->track_tag = false;
-  this->max_velocity = 0.8;
+  this->max_velocity = max_velocity;
   this->min = min;
   this->max = max;
   this->offset = offset;
