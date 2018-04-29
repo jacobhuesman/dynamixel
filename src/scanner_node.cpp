@@ -23,7 +23,7 @@ int main(int argc, char **argv)
   tf2_ros::TransformBroadcaster broadcaster;
 
   start_scan = false;
-  bool left_limit_hit = false, right_limit_hit = false;
+  bool left_limit_hit = true, right_limit_hit = true;
 
   // Initialize Camera Objects
   if (mraa_get_platform_type() != MRAA_UP2)
@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     throw cl_host_error("Host must be the UP2 board");
   }
 
-  Dynamixel *servo = new Dynamixel(0x11, "zr300_dynamixel", "zr300_mount", 284, 739, 28, 0.5);
+  Dynamixel *servo = new Dynamixel(0x11, "zr300_dynamixel", "zr300_mount", 284, 739, 155, 0.5);
 
   try
   {
@@ -55,18 +55,18 @@ int main(int argc, char **argv)
     try
     {
       servo->updatePosition();
-      ROS_INFO("Current Position: %i", servo->getCurrentPosition());
+      ROS_DEBUG("Current Position: %i", servo->getCurrentPosition());
       if (!right_limit_hit || !left_limit_hit)
       {
         servo->scan();
         if (servo->getCurrentPosition() >= (739 - 10))
         {
-          ROS_INFO("Hit left limit");
+          ROS_DEBUG("Hit left limit");
           left_limit_hit = true;
         }
         if (servo->getCurrentPosition() <= (284 + 10))
         {
-          ROS_INFO("Hit right limit");
+          ROS_DEBUG("Hit right limit");
           right_limit_hit = true;
         }
       }
