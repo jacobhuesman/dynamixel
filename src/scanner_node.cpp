@@ -2,6 +2,7 @@
 #include <dynamixel.h>
 #include <std_srvs/Empty.h>
 #include <tf2_ros/transform_broadcaster.h>
+#include <std_srvs/SetBool.h>
 
 using namespace dynamixel;
 using std_srvs::Empty;
@@ -21,6 +22,9 @@ int main(int argc, char **argv)
   ros::NodeHandle nh("~");
   ros::ServiceServer scan_service = nh.advertiseService("scan", scan_callback);
   tf2_ros::TransformBroadcaster broadcaster;
+
+  ros::ServiceClient client = nh.serviceClient<std_srvs::SetBool>("enable_mapping");
+  std_srvs::SetBool en_map;
 
   start_scan = false;
   bool left_limit_hit = true, right_limit_hit = true;
