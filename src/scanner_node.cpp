@@ -23,7 +23,7 @@ int main(int argc, char **argv)
   ros::NodeHandle nh("~");
   ros::ServiceServer scan_service = nh.advertiseService("scan", scan_callback);
   tf2_ros::TransformBroadcaster broadcaster;
-  ros::Publisher pub = nh.advertise<std_msgs::Bool>("Mapping_is_good",10);
+  ros::Publisher pub = nh.advertise<std_msgs::Bool>("mapping_is_good",1);
   ros::ServiceClient client = nh.serviceClient<std_srvs::SetBool>("enable_mapping");
   std_srvs::SetBool en_map;
   std_msgs::Bool mapping_good;
