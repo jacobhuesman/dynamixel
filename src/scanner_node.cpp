@@ -3,6 +3,7 @@
 #include <std_srvs/Empty.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <std_srvs/SetBool.h>
+#include <std_msgs/Bool.h>
 
 using namespace dynamixel;
 using std_srvs::Empty;
@@ -22,10 +23,11 @@ int main(int argc, char **argv)
   ros::NodeHandle nh("~");
   ros::ServiceServer scan_service = nh.advertiseService("scan", scan_callback);
   tf2_ros::TransformBroadcaster broadcaster;
-
+  ros::Publisher pub = nh.advertise<std_msgs::Bool>("Mapping_is_good",10);
   ros::ServiceClient client = nh.serviceClient<std_srvs::SetBool>("enable_mapping");
   std_srvs::SetBool en_map;
-
+  std_msgs::Bool mapping_good;
+  mapping_good.data = 0;
   start_scan = false;
   bool left_limit_hit = true, right_limit_hit = true;
 
@@ -54,6 +56,8 @@ int main(int argc, char **argv)
       left_limit_hit = false;
       right_limit_hit = false;
       start_scan = false;
+      en_map.request.data = 1;
+      client.call(en_map);
     }
 
     try
@@ -77,6 +81,9 @@ int main(int argc, char **argv)
       else if (abs(servo->getCurrentPosition() - 512) > 10)
       {
         servo->setPosition(512);
+        en_map.request.data = 0;
+        client.call (en_map);
+        mapping_good.data = 1;
       }
       broadcaster.sendTransform(servo->getTransformMsg());
     }
@@ -84,6 +91,7 @@ int main(int argc, char **argv)
     {
       ROS_WARN("%s", e.what());
     }
+    pub.publish(mapping_good);
     rate.sleep();
     ros::spinOnce();
   }
